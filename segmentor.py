@@ -10,13 +10,14 @@ import maxflow
 from pylab import *
 from numpy import *
 from PIL import Image
+import argparse
 
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", required=True, help="Path to the image")
+args = vars(ap.parse_args())
 
-
-img = cv2.imread('rose.jpg', cv2.IMREAD_GRAYSCALE)
-#img_size =(len(img),len(img[0]))
-img_size =(50,50)
-#img.resize((50,50))
+# load the image, clone it, and setup the mouse callback function
+img = cv2.imread(args["image"], cv2.IMREAD_GRAYSCALE)
 img_size =(len(img),len(img[0]))
 
 
