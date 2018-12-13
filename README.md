@@ -13,6 +13,6 @@ Then select a region as background, press key B to finish
 
 After done, press key Q to quit
 # PART2:
-Use the image segmenation tool 
+To use the image segmenation tool 
 in ternminal, do "python segmentor.py - i <image_path>"
 segmented foreground will be saved to project folder the
