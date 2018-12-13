@@ -11,6 +11,9 @@ from pylab import *
 from numpy import *
 from PIL import Image
 import argparse
+import progressbar
+from time import sleep
+
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="Path to the image")
@@ -18,9 +21,8 @@ args = vars(ap.parse_args())
 
 # load the image, clone it, and setup the mouse callback function
 img = cv2.imread(args["image"], cv2.IMREAD_GRAYSCALE)
+
 img_size =(len(img),len(img[0]))
-
-
 data_file = open("train_data.txt","r") 
 data=[]
 output=[]
@@ -35,35 +37,38 @@ lamda=0.0001
 print("\n-Training Mixture")
 start=time.time()
 while (data_file.readline()):
-	line=data_file.readline()
-	if (len(line)>0):
-		nums = line.split(' ')
-		intensity=int(nums[0])
-		is_foreground=int(line.split(' ')[1][0])
-		data.append([intensity])
-		output.append([is_foreground])
+    
+    line=data_file.readline()
+    if (len(line)>0):
+        nums = line.split(' ')
+        intensity=int(nums[0])
+        is_foreground=int(line.split(' ')[1][0])
+        data.append([intensity])
+        output.append([is_foreground])
 gmm = sklearn.mixture.GaussianMixture(n_components=2).fit(data)
 end=time.time()
 print("-Done in "+str(end-start))
+#--------------------------------------------------------------------------------#
 
-
-
+#--------------------------------------------------------------------------------#
 print("\n-Calculating foreground/background probability for each pixel")
+bar = progressbar.ProgressBar(maxval=len(img), \
+widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
 #start calculating foreground/background probability for each 
 start=time.time()
+bar.start()
 for i in range(len(img)):
+
     for j in range(len(img[0])):
-        #predict_result_fore = round(gmm.predict_proba([ [img[i,j]] ])[0][0] , 5)+0.000001   #added 0.00001 to prevent divide by zero
-        #predict_result_back = round(gmm.predict_proba([ [img[i,j]] ])[0][1] , 5)+0.000001	#added 0.00001 to prevent divide by zero
-        #Rp[i][j]=math.log(K*predict_result_fore/predict_result_back) 
-        PF[i][j]=round( gmm.predict_proba([ [img[i,j]] ])[0][0] ,5)
-        PB[i][j]=round( gmm.predict_proba([ [img[i,j]] ])[0][1] ,5)
-
-
+        result = gmm.predict_proba([ [img[i,j]] ])[0]
+        PF[i][j]=round(result[0],5)
+        PB[i][j]=round(result[1],5)
+    bar.update(i+1)
+bar.finish()
 #print Rp
 end=time.time()
 print("-Done in "+str(end-start))
-
+#--------------------------------------------------------------------------------#
 
 
 
@@ -86,7 +91,6 @@ def add_edge(a,b,i,j,weight,g):
     dest=get_node_number(a,b)
     weight*=10
     g.add_edge(source,dest,weight, 0)
-    print " normal edge: "+ str(weight)
 
 def add_t_links(i,j,g):
 
@@ -103,41 +107,40 @@ def add_neighborhood_edges(i,j,g):
     if (i-1>=0): 
         diff = img[i][j]-img[i-1][j]
         w = k*exp(-(abs(diff**2)/s))
-     #   w = k*exp(-(30**2)/10)
-        #add_edge(i-1,j,i,j,w,g)
+
         add_edge(i,j,i-1,j,w,g)
         if (j-1>=0): 
-        #    add_edge(i-1,j-1,i,j,w,g)
+  
             diff = img[i][j]-img[i-1][j-1]
             w =  k*exp(-(abs(diff**2)/s))
             add_edge(i,j,i-1,j-1,w,g)
         if (j+1<img_size[0]):
-        #    add_edge(i-1,j+1,i,j,w,g)
+    
             diff = img[i][j]-img[i-1][j+1]
             w = k*exp(-(abs(diff**2)/s))
             add_edge(i,j,i-1,j+1,w,g)
     if (i+1<img_size[0]):
-    #    add_edge(i+1,j,i,j,w,g)
+
         diff = img[i][j]-img[i+1][j]
         w = k*exp(-(abs(diff**2)/s))
         add_edge(i,j,i+1,j,w,g)
         if (j-1>=0): 
-        #    add_edge(i+1,j-1,i,j,w,g)
+      
             diff=img[i][j]-img[i+1][j]
             w = k*exp(-(abs(diff**2)/s))
             add_edge(i,j,i+1,j-1,w,g)
         if (j+1<img_size[0]):
-        #    add_edge(i+1,j+1,i,j,w,g)
+     
             diff=img[i][j]-img[i+1][j+1]
             w = k*exp(-(abs(diff**2)/s))
             add_edge(i,j,i+1,j+1,w,g)
     if (j-1>=0):
-    #    add_edge(i,j-1,i,j,w,g)
+  
         diff=img[i][j]-img[i][j-1]
         w = k*exp(-(abs(diff**2)/s))
         add_edge(i,j,i,j-1,w,g)
     if (j+1<img_size[0]):
-    #    add_edge(i,j+1,i,j,w,g)
+
         diff=img[i][j]-img[i][j+1]
         w = k*exp(-(abs(diff**2)/s))
         add_edge(i,j,i,j+1,w,g)
@@ -148,10 +151,16 @@ def get_pos_from_node_number(node_number):
 	return (int(row),col)
 
 def make_graph(g):
+    bar = progressbar.ProgressBar(maxval=img_size[0], \
+    widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
+
+    bar.start()
     for i in range(img_size[0]):
-        for j in range(img_size[0]):
+        for j in range(img_size[1]):
             add_neighborhood_edges(i,j,g)
             add_t_links(i,j,g)
+        bar.update(i+1)
+    bar.finish()
 
 
 start = time.time()
@@ -159,21 +168,15 @@ print("\n-Making graph")
 g = maxflow.Graph[int]()
 nodes = g.add_nodes(img_size[0]*img_size[1])
 
-#pic=maxflow.Graph[int]()
-#nodeids=pic.add_grid_nodes(img_size) # Adding non-nodes
-#pic.add_grid_edges(nodeids,0),pic.add_grid_tedges(nodeids, img, 255-img)
-#gr = pic.maxflow()
-#IOut = pic.get_grid_segments(nodeids)
+
 
 make_graph(g)
-
 end = time.time()
 print("-Done in "+str(end-start))
-
 start = time.time()
 print("\n-Initialize flow")
 flow = g.maxflow()
-print "Maximum flow:", flow
+print("Maximum flow:", flow)
 end = time.time()
 print("-Done in "+str(end-start))
 #---------------------------------Getting the Min-Cut ------------------------------------#
@@ -181,6 +184,7 @@ cuts = g.get_grid_segments(nodes)
 #print cuts
 
 print("\n-Finding cut:")
+
 start = time.time()
 #forming new foreground image
 Iout = ones(shape = nodes.shape)
@@ -192,8 +196,6 @@ for i in range(len(nodes)):
     if (Iout[i]==True):
         x,y=get_pos_from_node_number(i)
         img[x,y]=20
-
-print Iout
 
 end = time.time()
 print("-Done in "+str(end-start))
