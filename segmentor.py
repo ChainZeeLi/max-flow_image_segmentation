@@ -89,21 +89,26 @@ def add_edge(a,b,i,j,weight,g):
 
     source=get_node_number(i,j)
     dest=get_node_number(a,b)
-    weight*=10
+    weight*=0.5
     g.add_edge(source,dest,weight, 0)
 
 def add_t_links(i,j,g):
 
     node = get_node_number(i,j)
-    g.add_tedge(node,PF[i][j]*5, PB[i][j]*5 )
+
+    #if coefficient of PF >> PB , more pixels be foreground
+    g.add_tedge(node,PF[i][j]*10, PB[i][j]*3 )
  
 
 def add_neighborhood_edges(i,j,g):
    
     #w=10
+
+    
     k=10
-    s=100
- #   print img[i][j]
+    #foreground fades out if k goes down
+    s=1000
+    # background cuts get more sensitive/sharp if s is small 
     if (i-1>=0): 
         diff = img[i][j]-img[i-1][j]
         w = k*exp(-(abs(diff**2)/s))
