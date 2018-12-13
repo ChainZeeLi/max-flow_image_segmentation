@@ -5,7 +5,7 @@ EC504 Fall 2019 final project
 # Usage:
 # PART1:
 To train gaussian for a centerin type of image:
-in ternminal, #cd# to the project folder, do "python parts_selector.py - i <image_path>"
+in ternminal, cd to the project folder, do "python parts_selector.py - i <image_path>"
 
 After window with your image pops up, drag your mouse to select a region as foreground, press key F to finish
 
