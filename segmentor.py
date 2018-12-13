@@ -51,7 +51,7 @@ print("-Done in "+str(end-start))
 #--------------------------------------------------------------------------------#
 
 #--------------------------------------------------------------------------------#
-print("\n-Calculating foreground/background probability for each pixel")
+print("\n-Predicting F/B prob for each pixel")
 bar = progressbar.ProgressBar(maxval=len(img), \
 widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
 #start calculating foreground/background probability for each 
@@ -199,6 +199,7 @@ for i in range(len(nodes)):
 
 end = time.time()
 print("-Done in "+str(end-start))
+print("\n\n\n")
 cv2.imwrite('foreground.png',img)
 
 
