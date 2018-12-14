@@ -14,4 +14,4 @@ After done, press key Q to quit
 # PART2:
 To use the image segmenation tool 
 in ternminal, do "python segmentor.py - i <image_path>"
-segmented foreground will be saved to project folder the
+segmented foreground will be saved to this project folder
