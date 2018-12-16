@@ -3,7 +3,7 @@ EC504 Fall 2019 final project
 This projects uses max-flow and min-cut to find the best graph cut for image segmentation. 
 ### Usage:
 * **PART1:**
-To train gaussian for a centerin type of image:
+To train gaussian mixture model for grey-scale images:
 in ternminal, cd to the project folder, do `python parts_selector.py - i <image_path>`
 
 After window with your image pops up, drag your mouse to select a region as __foreground__, press key **F** to finish
