@@ -1,4 +1,4 @@
-# max-flow_image_segmentation
+# Image Segmentation With Max-Flow and Min-Cut
 EC504 Fall 2019 final project
 This projects uses max-flow and min-cut to find the best graph cut for image segmentation. 
 ### Usage:
@@ -12,7 +12,7 @@ Then select a region as __background__, press key **B** to finish
 When done, press key **Q** to quit
 * PART2:
 To use the image segmenation tool 
-in ternminal, do `python segmentor.py - i <image_path><addr>`
+in ternminal, do `python segmentor.py - i <image_path>`
 segmented foreground will be saved to this project folder
 
 *check out my website for more projects!*
