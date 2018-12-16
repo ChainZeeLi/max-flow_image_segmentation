@@ -4,13 +4,16 @@ This projects uses max-flow and min-cut to find the best graph cut for image seg
 ### Usage:
 * PART1:
 To train gaussian for a centerin type of image:
-in ternminal, cd to the project folder, do "<addr>python parts_selector.py - i <image_path><addr>"
+in ternminal, cd to the project folder, do `python parts_selector.py - i <image_path>`
 
-After window with your image pops up, drag your mouse to select a region as foreground, press key F to finish
+After window with your image pops up, drag your mouse to select a region as __foreground__, press key **F** to finish
 
-Then select a region as background, press key B to finish
-When done, press key Q to quit
+Then select a region as __background__, press key **B** to finish
+When done, press key **Q** to quit
 * PART2:
 To use the image segmenation tool 
-in ternminal, do "<addr>python segmentor.py - i <image_path><addr>"
+in ternminal, do `python segmentor.py - i <image_path><addr>`
 segmented foreground will be saved to this project folder
+
+*check out my website for more projects!*
+http://www.markli.com
