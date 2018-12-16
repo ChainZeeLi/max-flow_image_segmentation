@@ -16,4 +16,4 @@ in ternminal, do `python segmentor.py - i <image_path>`
 segmented foreground will be saved to this project folder
 
 *check out my website for more projects!*
-http://www.markli.com
+http://www.markli.site
