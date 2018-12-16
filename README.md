@@ -15,5 +15,7 @@ To use the image segmenation tool
 in ternminal, do `python segmentor.py - i <image_path>`
 segmented foreground will be saved to this project folder
 
+!(rose.jpg)  !(foreground.jpg)
+
 *check out my website for more projects!*
 http://www.markli.site
