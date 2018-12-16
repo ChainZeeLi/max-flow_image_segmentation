@@ -1,5 +1,5 @@
 # Image Segmentation With Max-Flow and Min-Cut
-EC504 Fall 2019 final project
+EC504 Fall 2018 final project
 This projects uses max-flow and min-cut to find the best graph cut for image segmentation. 
 ### Usage:
 * **PART1:**
